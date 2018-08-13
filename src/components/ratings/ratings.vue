@@ -62,7 +62,7 @@
   import ratingselect from '../ratingselect/ratingselect';
   import split from '../split/split';
   const ALL = 2;
-  // const ERR_OK = 0;
+  const ERR_OK = 0;
   export default {
     props: {
       seller: {
@@ -77,16 +77,16 @@
       };
     },
     created () {
-      this.$http.get('../static/data.json').then(response => {
-        // console.log(response);
+      this.$http.get('/api/ratings').then(response => {
         response = response.body;
-        this.ratings = response.ratings;
-        this.$nextTick(() => {
-          this.scroll = new BScroll(this.$refs.ratings, {
-            click: true
+        if (response.errno === ERR_OK) {
+          this.ratings = response.data;
+          this.$nextTick(() => {
+            this.scroll = new BScroll(this.$refs.ratings, {
+              click: true
+            });
           });
-        });
-        // console.log(this.goods);
+        }
       }, response => {
         console.log('服务器请求失败');
       });

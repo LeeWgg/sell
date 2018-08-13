@@ -46,6 +46,7 @@
   import shopcart from '../shopcart/shopcart';
   import cartcontrol from '../cartcontrol/cartcontrol';
   import food from '../food/food';
+  const ERR_OK = 0;
   export default {
     props: {
       seller: {
@@ -61,15 +62,16 @@
       };
     },
     created () {
-      this.$http.get('../static/data.json').then(response => {
+      this.$http.get('/api/goods').then(response => {
         // console.log(response);
         response = response.body;
-        this.goods = response.goods;
-        this.$nextTick(() => {
-          this._initScroll();
-          this._calculateHeight();
-        });
-        // console.log(this.goods);
+        if (response.errno === ERR_OK) {
+          this.goods = response.data;
+          this.$nextTick(() => {
+            this._initScroll();
+            this._calculateHeight();
+          });
+        }
       }, response => {
         console.log('服务器请求失败');
       });

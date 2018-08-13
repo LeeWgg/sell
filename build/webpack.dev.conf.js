@@ -10,6 +10,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
+ // mock数据
+const express = require('express')
+const app = express()
+const appData = require('../data.json')
+const seller = appData.seller
+const goods = appData.goods
+const ratings = appData.ratings
+const apiRouter = express.Router()
+app.use('/api', apiRouter)
+// 结束
+
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
@@ -22,6 +33,29 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
+    before (app) {
+      app.get('/api/seller', function (req, res) {
+        // 服务端收到请求后返回给客户端一个json数据
+        res.json({
+          // 当我们数据正常时，我们通过传递errno字符为0表示数据正常
+          errno: 0,
+          // 返回json中的卖家数据
+          data: seller
+        })
+      })
+      app.get('/api/goods', function (req, res) {
+        res.json({
+          errno: 0,
+          data: goods
+        })
+      })
+      app.get('/api/ratings', function (rea, res) {
+        res.json({
+          errno: 0,
+          data: ratings
+        })
+      })
+    },
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [

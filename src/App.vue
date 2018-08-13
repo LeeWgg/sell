@@ -20,6 +20,7 @@
 
 <script type="text/ecmascript-6">
   import header from './components/header/header';
+  const ERR_OK = 0;
   export default {
     data () {
       return {
@@ -29,11 +30,11 @@
       };
     },
     created () {
-      this.$http.get('../static/data.json').then(response => {
-        // console.log(response);
+      this.$http.get('/api/seller').then(response => {
         response = response.body;
-        this.seller = response.seller;
-        // console.log(this.seller);
+        if (response.errno === ERR_OK) {
+          this.seller = response.data;
+        }
       }, response => {
         console.log('服务器请求失败');
       });
